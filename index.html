@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Ujian CBT SMAN 1 Cikalongwetan</title>
+    <title>Portal Ujian CBT - Ekonomi SMAN 1 Cikalongwetan</title>
     <style>
         * {
             margin: 0;
@@ -153,9 +153,7 @@
         <div class="input-group">
             <label>MATA PELAJARAN</label>
             <select id="mapelSelect">
-                <option value="">-- Pilih Mata Pelajaran --</option>
-                <option value="https://docs.google.com/forms/d/e/PASTE_LINK_FORM_GEOGRAFI/viewform">Geografi</option>
-                <option value="https://docs.google.com/forms/d/e/PASTE_LINK_FORM_SOSIOLOGI/viewform">Sosiologi</option>
+                <option value="https://forms.gle/hS1wZeteDDcDNiWi6">Ekonomi</option>
             </select>
         </div>
 
@@ -199,10 +197,6 @@
 
             if (!nama) {
                 alert("Harap isi Nama Lengkap terlebih dahulu!");
-                return;
-            }
-            if (!urlForm) {
-                alert("Pilih Mata Pelajaran!");
                 return;
             }
             if (tokenInput !== TOKEN_MASUK_VALID) {
