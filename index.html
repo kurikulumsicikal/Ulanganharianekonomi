@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Online</title>
+    <style>
+        * {
+            user-select: none; /* Mencegah teks diblok/ditingkah */
+            -webkit-user-select: none;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+        }
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        #overlay button {
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Layar Pengunci Layar Penuh (Full Screen) -->
+    <div id="overlay">
+        <h2>Ujian Mode Aman</h2>
+        <p>Klik tombol di bawah untuk memulai ujian dalam mode layar penuh.</p>
+        <button onclick="startExam()">Mulai Ujian</button>
+    </div>
+
+    <!-- GANTI LINK DI BAWAH INI DENGAN LINK GOOGLE FORM KAMU -->
+    <iframe id="exam-frame" src="https://forms.gle/WVCiYLTFu6dugMwa7"></iframe>
+
+    <script>
+        let warningCount = 0;
+        const maxWarnings = 3; // Batas toleransi pindah tab
+
+        function startExam() {
+            let elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari / iOS */
+                elem.webkitRequestFullscreen();
+            }
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // 1. Deteksi Pindah Tab / Pindah Aplikasi (Blur / Visibility Change)
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                warningCount++;
+                alert(`PERINGATAN! Kamu terdeteksi meninggalkan halaman ujian!\nPelanggaran ke-${warningCount} dari ${maxWarnings}.`);
+                
+                if (warningCount >= maxWarnings) {
+                    alert("Kamu telah melebihi batas batas keluar halaman. Ujian kamu ter-blokir!");
+                    document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%;'>Akses Ditolak! Anda terdeteksi melakukan kecurangan berulang kali.</h1>";
+                }
+            }
+        });
+
+        // 2. Mencegah Klik Kanan
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 3. Mencegah Tombol Kombinasi Shortcut (Copy, Paste, DevTools)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey || e.keyCode === 123) { // Ctrl / Cmd / F12
+                e.preventDefault();
+                alert("Fitur shortcut dimatikan selama ujian!");
+            }
+        });
+    </script>
+</body>
+</html>
