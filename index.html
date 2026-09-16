@@ -213,16 +213,9 @@
         }
 
         // --- SISTEM DETEKSI PELANGGARAN ---
-        // 1. Deteksi saat siswa meninggalkan tab / ganti aplikasi
+        // Deteksi HANYA saat siswa benar-benar keluar tab / berpindah aplikasi
         document.addEventListener("visibilitychange", function() {
             if (document.hidden && sedangUjian) {
-                kunciLayar();
-            }
-        });
-
-        // 2. Deteksi saat siswa menekan tombol luar / window kehilangan fokus
-        window.addEventListener("blur", function() {
-            if (sedangUjian) {
                 kunciLayar();
             }
         });
