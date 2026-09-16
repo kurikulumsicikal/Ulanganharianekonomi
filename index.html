@@ -3,113 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ujian Online Aman</title>
+    <title>Portal Ujian CBT - Ekonomi SMAN 1 Cikalongwetan</title>
     <style>
         * {
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        body, html {
             margin: 0;
             padding: 0;
-            height: 100%;
-            overflow: hidden;
-            background-color: #f4f4f9;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        #overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            color: white;
+        body {
+            background-color: #f0f2f5;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            text-align: center;
-            padding: 20px;
         }
-        #overlay h2 {
-            margin-bottom: 10px;
-        }
-        #overlay p {
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 90%;
             max-width: 400px;
-            font-size: 14px;
-            color: #ddd;
-            line-height: 1.5;
+            text-align: center;
         }
-        #overlay button {
-            padding: 12px 28px;
-            font-size: 16px;
+        h2 {
+            color: #1a73e8;
+            margin-bottom: 8px;
+        }
+        p.subtitle {
+            color: #5f6368;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            font-size: 12px;
             font-weight: bold;
-            cursor: pointer;
-            background: #28a745;
+            color: #3c4043;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+        input:focus, select:focus {
+            border-color: #1a73e8;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1a73e8;
             color: white;
             border: none;
             border-radius: 6px;
-            margin-top: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
         }
-        #overlay button:hover {
-            background: #218838;
+        button:hover {
+            background-color: #1557b0;
+        }
+
+        /* Frame Ujian Fullscreen */
+        #examFrameContainer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
         }
         iframe {
             width: 100%;
-            height: 100vh;
+            height: 100%;
             border: none;
+        }
+
+        /* Modal Layar Terkunci Pengawas */
+        #lockOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(217, 48, 37, 0.95);
+            z-index: 9999;
+            color: white;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
+        #lockOverlay h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        #lockOverlay p {
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+        .pin-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 320px;
+            color: #333;
+        }
+        .pin-box input {
+            text-align: center;
+            font-size: 20px;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+        }
+        .btn-unlock {
+            background-color: #d93025;
+        }
+        .btn-unlock:hover {
+            background-color: #b31d16;
         }
     </style>
 </head>
 <body>
 
-    <!-- Layar Pengunci Layar Penuh (Full Screen) -->
-    <div id="overlay">
-        <h2>Ujian Online Mode Aman</h2>
-        <p>Dilarang keluar dari layar ujian, berpindah tab, atau membuka aplikasi lain selama ujian berlangsung.</p>
-        <button onclick="startExam()">Mulai Ujian Sekarang</button>
+    <!-- Form Login Masuk Ujian -->
+    <div class="container" id="loginBox">
+        <h2>PORTAL UJIAN CBT</h2>
+        <p class="subtitle">SMAN 1 Cikalongwetan</p>
+        
+        <div class="input-group">
+            <label>NAMA LENGKAP</label>
+            <input type="text" id="namaSiswa" placeholder="Masukkan nama lengkap" required>
+        </div>
+
+        <div class="input-group">
+            <label>MATA PELAJARAN</label>
+            <select id="mapelSelect">
+                <option value="https://docs.google.com/forms/d/e/1FAIpQLSdeOTh5-XJscK2T398y5pQfX-pQW3M75-y0G2N5k-xY3X-xxx/viewform?embedded=true">Ekonomi</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>TOKEN MASUK UJIAN</label>
+            <input type="password" id="tokenMasuk" placeholder="Masukkan Token Ujian" required>
+        </div>
+
+        <button onclick="mulaiUjian()">MULAI UJIAN</button>
     </div>
 
-    <!-- LINK GOOGLE FORM KAMU SUDAH TERPASANG DI SINI -->
-    <iframe id="exam-frame" src="https://docs.google.com/forms/d/e/1FAIpQLSfkWYjbedejkV_rdRCiHiKe2fqdf-TwaqaV8Dxze75dzUl_Dg/viewform?embedded=true"></iframe>
+    <!-- Tampilan Ujian (Iframe) -->
+    <div id="examFrameContainer">
+        <iframe id="examFrame" src=""></iframe>
+    </div>
+
+    <!-- Layar Penguncian (Hanya Buka Lewat PIN Pengawas) -->
+    <div id="lockOverlay">
+        <h1>UJIAN TERKUNCI!</h1>
+        <p>Terdeteksi meninggalkan halaman/aplikasi ujian.<br>Silakan panggil <b>Pengawas</b> untuk membuka kuncian.</p>
+        
+        <div class="pin-box">
+            <label style="text-align: center; margin-bottom: 10px;">PIN PENGAWAS</label>
+            <input type="password" id="pinPengawasInput" placeholder="****" maxlength="8">
+            <button class="btn-unlock" onclick="bukaKunci()">BUKA KUNCIAN</button>
+        </div>
+    </div>
 
     <script>
-        let warningCount = 0;
-        const maxWarnings = 3; // Batas keluar tab sebelum diblokir
+        // ================= KONFIGURASI =================
+        const TOKEN_MASUK_VALID = "SMAN12026"; // Token siswa untuk masuk ujian
+        const PIN_PENGAWAS = "123456";         // PIN khusus Pengawas untuk buka kuncian
+        // ===============================================
 
-        function startExam() {
-            let elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { /* Safari / iOS */
-                elem.webkitRequestFullscreen();
+        let sedangUjian = false;
+
+        function mulaiUjian() {
+            const nama = document.getElementById("namaSiswa").value.trim();
+            const urlForm = document.getElementById("mapelSelect").value;
+            const tokenInput = document.getElementById("tokenMasuk").value.trim();
+
+            if (!nama) {
+                alert("Harap isi Nama Lengkap terlebih dahulu!");
+                return;
             }
-            document.getElementById('overlay').style.display = 'none';
+            if (tokenInput !== TOKEN_MASUK_VALID) {
+                alert("Token Ujian Salah!");
+                return;
+            }
+
+            // Aktifkan Tampilan Ujian
+            document.getElementById("loginBox").style.display = "none";
+            document.getElementById("examFrame").src = urlForm;
+            document.getElementById("examFrameContainer").style.display = "block";
+            
+            sedangUjian = true;
         }
 
-        // 1. Deteksi Pindah Tab atau Pindah Aplikasi
+        // --- SISTEM DETEKSI PELANGGARAN ---
+        // Deteksi HANYA saat siswa benar-benar keluar tab / berpindah aplikasi
         document.addEventListener("visibilitychange", function() {
-            if (document.hidden) {
-                warningCount++;
-                if (warningCount < maxWarnings) {
-                    alert(`PERINGATAN!\nKamu terdeteksi meninggalkan halaman ujian!\nPelanggaran ke-${warningCount} dari ${maxWarnings}.`);
-                } else {
-                    alert("Akses Ujian Diblokir!\nKamu telah melebihi batas toleransi berpindah tab/aplikasi.");
-                    document.body.innerHTML = "<div style='display:flex; justify-content:center; align-items:center; height:100vh; background:#111; color:red; font-family:sans-serif;'><h1>AKSES DITOLAK: Anda terdeteksi melakukan kecurangan.</h1></div>";
-                }
+            if (document.hidden && sedangUjian) {
+                kunciLayar();
             }
         });
 
-        // 2. Mencegah Klik Kanan
-        document.addEventListener('contextmenu', event => event.preventDefault());
+        function kunciLayar() {
+            document.getElementById("lockOverlay").style.display = "flex";
+        }
 
-        // 3. Mencegah Kombinasi Tombol Shortcut (Copy, Paste, DevTools)
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey || e.metaKey || e.keyCode === 123) {
-                e.preventDefault();
-                alert("Fitur tombol kombinasi (Copy/Paste/Inspect) dimatikan!");
+        function bukaKunci() {
+            const inputPIN = document.getElementById("pinPengawasInput").value;
+
+            if (inputPIN === PIN_PENGAWAS) {
+                document.getElementById("lockOverlay").style.display = "none";
+                document.getElementById("pinPengawasInput").value = ""; // Reset input
+                alert("Kuncian berhasil dibuka. Silakan lanjutkan ujian.");
+            } else {
+                alert("PIN Pengawas Salah!");
+                document.getElementById("pinPengawasInput").value = "";
             }
-        });
+        }
     </script>
 </body>
 </html>
